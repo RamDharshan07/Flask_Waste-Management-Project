@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Waste Management</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon">
+    <link href="{{ url_for('static', filename='img/apple-touch-icon.png') }}" rel="apple-touch-icon">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            background-color: lightblue;
+        }
+        .jumbotron {
+            background-color: lightgreen;
+            border: 2px solid green;
+        }
+        .jumbotron h1 {
+            text-align: center;
+            color: darkblue;
+            margin-top: 10px;
+        }
+        footer.mastfoot {
+            background-color: lightgreen;
+            color: black;
+            text-align: center;
+            border: 3px solid green;
+        }
+    </style>
+</head>
+<body>
+    <div class="jumbotron">
+        <h1>
+            Councilor Panel<br>
+            <font size="6">{{k2[0]["city"]}}<br>Ward No. {{k2[0]["ward"]}}</font>
+        </h1>
+        <p id="marquee">
+            <marquee>Welcome {{k2[0]["name"]}}</marquee>
+        </p>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <h1>Basic Actions</h1>
+                <a href="/logoutw"><button class="btn btn-primary">Logout</button></a>
+                <hr style="color: black;">
+                <h1>Complaints</h1>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Complaint</th>
+                            <th>Date</th>
+                            <th>Email</th>
+                            <th>Mobile</th>
+                            <th>Image</th>
+                            <th>Status</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in k4 %}
+                        <tr id="complaint-{{ p['id'] }}">
+                            <td>{{ p["name"] }}</td>
+                            <td>{{ p["complain"] }}</td>
+                            <td>{{ p["date"] }}</td>
+                            <td>{{ p["email"] }}</td>
+                            <td>{{ p["mobile"] }}</td>
+                            <td>{{ p["image"] }}</td>
+                            <td class="status">{{ p["status"] }}</td>
+                            <td><button class="btn btn-primary mark-resolved" data-id="{{ p['id'] }}">Mark as Resolved</button></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer class="mastfoot mt-auto">
+        <div class="inner">
+            <h5><a href="#">@Waste Management</a></h5>
+            <p>Government <br>of India</p>
+        </div>
+    </footer>
+
+    <script>
+        $(document).ready(function() {
+            $('.mark-resolved').click(function() {
+                var complaintId = $(this).data('id');
+                var row = $('#complaint-' + complaintId);
+
+                $.ajax({
+                    url: '/update/' + complaintId,
+                    type: 'POST',
+                    success: function(response) {
+                        if (response.success) {
+                            row.find('.status').text('Resolved');
+                        } else {
+                            alert('Failed to update the status.');
+                        }
+                    },
+                    error: function() {
+                        alert('Error updating the status.');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
