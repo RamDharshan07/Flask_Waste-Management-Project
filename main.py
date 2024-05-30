@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 # Correct MongoDB connection string with SSL certificate verification bypass
 client = MongoClient(
-    "mongodb+srv://ramdharshan206:oJF9iQxn7rr76jgY@cluster0.tu8f8dr.mongodb.net/?retryWrites=true&w=majority",
+    "mongodb+srv://user2006:user2008@cluster0.tu8f8dr.mongodb.net/",
     tlsCAFile=certifi.where()
 )
 db = client.get_database('wms')
